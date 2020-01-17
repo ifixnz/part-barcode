@@ -14,6 +14,7 @@ class PartCategory extends React.Component {
         this.loadAllPartCategories = this.loadAllPartCategories.bind(this);
         this.createPartCategory = this.createPartCategory.bind(this);
         this.toggleText = this.toggleText.bind(this);
+        this.categorySelectionCallback = this.categorySelectionCallback.bind(this);
     }
 
     loadAllPartCategories() {
@@ -27,6 +28,12 @@ class PartCategory extends React.Component {
                 this.setState({partCategories: null});
             }
         });
+    }
+
+    categorySelectionCallback(categoryId) {
+        if (this.props.onCategorySelect) {
+            this.props.onCategorySelect(categoryId);
+        }
     }
 
     componentDidMount() {
@@ -44,14 +51,14 @@ class PartCategory extends React.Component {
     createPartCategory(node) {
         if (node.children.length === 0) {
             return (<ListGroup.Item>
-                <Button variant="link" onClick={() => console.log(node['@id'] + ' selected.')}>{node.name}</Button>
+                <Button variant="link" onClick={() => this.categorySelectionCallback(node['@id'])}>{node.name}</Button>
             </ListGroup.Item>);
         }
         return (<Accordion defaultActiveKey={node['@id']}>
             <ListGroup.Item>
                 <ButtonToolbar>
                     <Accordion.Toggle as={Button} variant="light" eventKey={node['@id']} onClick={(e) => this.toggleText(e.target)}>-</Accordion.Toggle>
-                    <Button variant="link" onClick={() => console.log(node['@id'] + ' selected.')}>{node.name}</Button>
+                    <Button variant="link" onClick={() => this.categorySelectionCallback(node['@id'])}>{node.name}</Button>
                 </ButtonToolbar>
             </ListGroup.Item>
             <Accordion.Collapse eventKey={node['@id']}>

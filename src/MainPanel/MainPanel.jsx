@@ -1,16 +1,31 @@
 import React from 'react';
-//import $ from 'jquery';
-
-import PartCategory from './PartCategory.jsx'
+import PartList from './Part.jsx';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import PartCategory from './PartCategory.jsx';
+import Col from 'react-bootstrap/Col';
 
 class MainPanel extends React.Component {
-    // constructor(props) {
-    //     super(props);
-    // }
+    constructor(props) {
+        super(props);
+        this.state = {
+            currentCategory: null
+        };
+        this.handleCategorySelection = this.handleCategorySelection.bind(this);
+    }
+
+    handleCategorySelection(categoryId) {
+        console.log(categoryId + ' is selected...');
+        this.setState({currentCategory: categoryId});
+    }
 
     render() {
-        // TODO layout other sections
-        return (<PartCategory/>);
+        return (<Container>
+            <Row>
+                <Col sm={4}><PartCategory onCategorySelect={this.handleCategorySelection}/></Col>
+                <Col sm={8}><PartList categoryId={this.state.currentCategory}/></Col>
+            </Row>
+        </Container>);
     }
 }
 

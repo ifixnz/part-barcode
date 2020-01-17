@@ -13,7 +13,6 @@ class LoginForm extends React.Component {
 
     constructor(props) {
         super(props);
-        window.localStorage.setItem('loginUser', null);
         let usr = window.localStorage.getItem('loginUser')
         this.state = {
             username: '',
@@ -49,7 +48,6 @@ class LoginForm extends React.Component {
     }
 
     doWSSEAuthentication(userSalt) {
-        // export function getWSSE(username, password, salt, creationDate = null, nonceLength = 16)
         let wsseToken = WSSEAuthenticationHelper.getWSSE(
             this.state.username,
             this.state.password,
@@ -64,6 +62,7 @@ class LoginForm extends React.Component {
             },
             success: data => {
                 console.log(data);
+                window.localStorage.setItem('loginUser', JSON.stringify(data));
                 this.setState({user: data});
             },
 /*{
@@ -110,21 +109,24 @@ class LoginForm extends React.Component {
     }
 
     loginFromCookie() {
-        /*
-        $.ajax({
-            type: 'GET',
-            url: '/api/user/login',
-            success: data => {
-                this.setState({user: data, cookieLogin: false});
-            },
-            error: () => {
-                this.setState({user: null, cookieLogin: false});
-            }
-        });*/
-        this.setState({user: null, cookieLogin: false});
+        try {
+            $.ajax({
+                type: 'GET',
+                url: this.state.user['@id'],
+                success: data => {
+                    this.setState({user: data, cookieLogin: false});
+                },
+                error: () => {
+                    this.setState({user: null, cookieLogin: false});
+                }
+            });
+        } catch (e) {
+            this.setState({user: null, cookieLogin: false});
+        }
     }
 
     logout() {
+        window.localStorage.setItem('loginUser', null);
     }
 
     render() {
