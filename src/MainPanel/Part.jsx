@@ -16,6 +16,7 @@ class PartList extends React.Component {
         this.partTableHeaders = [
             'Name',
             'Description',
+            'Category',
             'Internal ID',
             'Storage Location',
             'Status',
@@ -62,6 +63,7 @@ class PartList extends React.Component {
         return (<>
             <th scope="row">{part.name}</th>
             <td>{part.description}</td>
+            <td>{part.category.name}</td>
             <td>{part.internalPartNumber}</td>
             <td>{part.storageLocation.name}</td>
             <td>{part.tatus}</td>
