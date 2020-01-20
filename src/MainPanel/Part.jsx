@@ -24,10 +24,22 @@ class PartList extends React.Component {
     }
 
     loadPartsInCategory(categoryId, page = 0) {
-        console.log('Loading parts for: ' + categoryId + ' in page: ' + page);
+        let filterStr = '&filter=';
+        if (categoryId.length === 1) {
+            filterStr += `{"property":"category","operator":"=","value":"${categoryId}"}`;
+        } else {
+            let filters = [{
+                subfilters: [],
+                property: 'category',
+                operator: 'IN',
+                value: Array.from(categoryId)
+            }];
+            filterStr += JSON.stringify(filters);
+        }
+        console.log('filterStr=' + filterStr);
         $.ajax({
             type: 'GET',
-            url: `api/parts?page=${page}&itemsPerPage=${this.state.amountPerPage}&filter={"property":"category","operator":"=","value":"${categoryId}"}`,
+            url: `api/parts?page=${page}&itemsPerPage=${this.state.amountPerPage}` + filterStr,
             success: data => {
                 // this.setState({partCategories: data});
                 this.partTableRef.current.setDataAndTotalAmount(data['hydra:member'], data['hydra:totalItems']);

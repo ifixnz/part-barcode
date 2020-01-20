@@ -5,7 +5,7 @@ module.exports = function(app) {
     // PartKeepr APIs
     app.use('/api',
             proxy({
-                target : 'http://192.168.1.77',
+                target : 'http://192.168.1.85',
                 changeOrigin : true,
                 logLevel : LOG_LEVEL
             }));

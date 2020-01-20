@@ -15,7 +15,6 @@ class MainPanel extends React.Component {
     }
 
     handleCategorySelection(categoryId) {
-        console.log(categoryId + ' is selected...');
         this.setState({currentCategory: categoryId});
     }
 
