@@ -2,13 +2,15 @@ import React from 'react';
 import $ from 'jquery';
 import PaginationDataTable from './DataTable.jsx';
 import {simpleTableHeader} from './DataTable.jsx';
+import PartDetail from './PartDetail.jsx';
 
 class PartList extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            amountPerPage: 10
+            amountPerPage: 10,
+            currentPartId: null
         };
         this.loadPartsInCategory = this.loadPartsInCategory.bind(this);
         this.jumpToPage = this.jumpToPage.bind(this);
@@ -42,7 +44,7 @@ class PartList extends React.Component {
             type: 'GET',
             url: `api/parts?page=${page}&itemsPerPage=${this.state.amountPerPage}` + filterStr,
             success: data => {
-                // this.setState({partCategories: data});
+                this.setState({currentPartId: null});
                 this.partTableRef.current.setDataAndTotalAmount(data['hydra:member'], data['hydra:totalItems']);
             },
             error: () => {
@@ -82,8 +84,9 @@ class PartList extends React.Component {
                                  jumpToPage={this.jumpToPage}
                                  rowKeyMapping={row => row['@id']}
                                  amountPerPage={this.state.amountPerPage}
+                                 rowOnClick={(p) => this.setState({currentPartId: p})}
                                  ref={this.partTableRef} />
-            <div><p>part details</p></div>
+            <PartDetail part={this.state.currentPartId}/>
         </>);
     }
 }

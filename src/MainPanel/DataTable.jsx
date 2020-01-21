@@ -8,6 +8,7 @@ class SimpleDataTable extends React.Component {
     constructor(props) {
         super(props);
         this.getRowKey = this.getRowKey.bind(this);
+        this.rowClicked = this.rowClicked.bind(this);
     }
 
     getRowKey(row) {
@@ -15,6 +16,13 @@ class SimpleDataTable extends React.Component {
             return this.props.rowKeyMapping(row);
         }
         return JSON.stringify(row);
+    }
+
+    rowClicked(event, rowKey) {
+        // TODO highlight selection
+        if (this.props.rowOnClick) {
+            this.props.rowOnClick(rowKey);
+        }
     }
 
     render() {
@@ -27,7 +35,7 @@ class SimpleDataTable extends React.Component {
                     <tr>{this.props.tableHeader()}</tr>
                 </thead>
                 <tbody>
-                    {this.props.data.map(row =><tr key={this.getRowKey(row)}>{this.props.processRow(row)}</tr>)}
+                    {this.props.data.map(row => <tr key={this.getRowKey(row)} onClick={(e) => this.rowClicked(e, this.getRowKey(row))}>{this.props.processRow(row)}</tr>)}
                 </tbody>
             </Table>
         );
@@ -93,6 +101,7 @@ class PaginationDataTable extends React.Component {
             <SimpleDataTable tableHeader={this.props.tableHeader}
                              processRow={this.props.processRow}
                              rowKeyMapping={this.props.rowKeyMapping}
+                             rowOnClick={this.props.rowOnClick}
                              data={this.state.data} />
             <Pagination>{pages}</Pagination>
         </>);
