@@ -1,12 +1,15 @@
 import React from 'react';
 import $ from 'jquery';
+import Barcode from './Barcode.jsx';
+import Button from 'react-bootstrap/Button';
 
 class PartDetail extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            currentPartDetail: null
+            currentPartDetail: null,
+            isBarcodeShown: false
         };
         this.loadPartDetail = this.loadPartDetail.bind(this);
     }
@@ -44,6 +47,11 @@ class PartDetail extends React.Component {
             <p>{'Part Category: ' + this.state.currentPartDetail.category.categoryPath}</p>
             <p>{'Storage Location: ' + this.state.currentPartDetail.storageLocation.name}</p>
             <p>{'Current Stock: ' + this.state.currentPartDetail.stockLevel}</p>
+            <Button onClick={() => this.setState({isBarcodeShown: true})}>View Barcode</Button>
+            <Barcode show={this.state.isBarcodeShown}
+                     onHide={() => this.setState({isBarcodeShown: false})}
+                     title={'Part: ' + this.state.currentPartDetail.name}
+                     part={this.state.currentPartDetail} />
         </div>);
     }
 }

@@ -22,7 +22,8 @@ class PartList extends React.Component {
             'Internal ID',
             'Storage Location',
             'Status',
-            'Stock'
+            'Stock',
+            'Barcode'
         ];
     }
 
@@ -68,8 +69,9 @@ class PartList extends React.Component {
             <td>{part.category.name}</td>
             <td>{part.internalPartNumber}</td>
             <td>{part.storageLocation.name}</td>
-            <td>{part.tatus}</td>
+            <td>{part.status}</td>
             <td>{part.stockLevel}</td>
+            <td>View Barcode</td>
         </>);
     }
 
