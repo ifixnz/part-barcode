@@ -35,7 +35,7 @@ class SimpleDataTable extends React.Component {
                     <tr>{this.props.tableHeader()}</tr>
                 </thead>
                 <tbody>
-                    {this.props.data.map(row => <tr key={this.getRowKey(row)} onClick={(e) => this.rowClicked(e, this.getRowKey(row))}>{this.props.processRow(row)}</tr>)}
+                    {this.props.data.map(row => <tr key={this.getRowKey(row)} onClick={(e) => this.rowClicked(e, this.getRowKey(row))}>{this.props.processRow(row, this.props.callbackList)}</tr>)}
                 </tbody>
             </Table>
         );
@@ -102,6 +102,7 @@ class PaginationDataTable extends React.Component {
                              processRow={this.props.processRow}
                              rowKeyMapping={this.props.rowKeyMapping}
                              rowOnClick={this.props.rowOnClick}
+                             callbackList={this.props.callbackList}
                              data={this.state.data} />
             <Pagination>{pages}</Pagination>
         </>);

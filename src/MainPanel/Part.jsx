@@ -3,6 +3,8 @@ import $ from 'jquery';
 import PaginationDataTable from './DataTable.jsx';
 import {simpleTableHeader} from './DataTable.jsx';
 import PartDetail from './PartDetail.jsx';
+import Button from 'react-bootstrap/Button';
+import Barcode from './Barcode.jsx';
 
 class PartList extends React.Component {
 
@@ -10,18 +12,19 @@ class PartList extends React.Component {
         super(props);
         this.state = {
             amountPerPage: 10,
-            currentPartId: null
+            currentPartId: null,
+            isBarcodeShown: false,
+            currentPartDetail: {name: ''}
         };
         this.loadPartsInCategory = this.loadPartsInCategory.bind(this);
+        this.handleBarcode = this.handleBarcode.bind(this);
         this.jumpToPage = this.jumpToPage.bind(this);
         this.partTableRef = React.createRef();
         this.partTableHeaders = [
             'Name',
-            'Description',
             'Category',
             'Internal ID',
             'Storage Location',
-            'Status',
             'Stock',
             'Barcode'
         ];
@@ -62,16 +65,18 @@ class PartList extends React.Component {
         }
     }
 
-    processUserRow(part) {
+    handleBarcode(part) {
+        this.setState({currentPartDetail: part, isBarcodeShown: true});
+    }
+
+    processUserRow(part, cbList) {
         return (<>
             <th scope="row">{part.name}</th>
-            <td>{part.description}</td>
             <td>{part.category.name}</td>
             <td>{part.internalPartNumber}</td>
             <td>{part.storageLocation.name}</td>
-            <td>{part.status}</td>
             <td>{part.stockLevel}</td>
-            <td>View Barcode</td>
+            <td><Button onClick={() => cbList[0](part)} size="sm">View Barcode</Button></td>
         </>);
     }
 
@@ -87,8 +92,13 @@ class PartList extends React.Component {
                                  rowKeyMapping={row => row['@id']}
                                  amountPerPage={this.state.amountPerPage}
                                  rowOnClick={(p) => this.setState({currentPartId: p})}
+                                 callbackList={[this.handleBarcode]}
                                  ref={this.partTableRef} />
             <PartDetail part={this.state.currentPartId}/>
+            <Barcode show={this.state.isBarcodeShown}
+                     onHide={() => this.setState({isBarcodeShown: false})}
+                     title={'Part: ' + this.state.currentPartDetail.name}
+                     part={this.state.currentPartDetail} />
         </>);
     }
 }
