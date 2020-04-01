@@ -1,6 +1,5 @@
 import React from 'react';
 import $ from 'jquery';
-import ListGroup from 'react-bootstrap/ListGroup';
 import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
@@ -82,22 +81,24 @@ class PartCategory extends React.Component {
 
     createPartCategory(node) {
         if (node.children.length === 0) {
-            return (<ListGroup.Item>
+            return (
                 <Button variant="link" onClick={() => this.categorySelectionCallback(node['@id'])}>{node.name}</Button>
-            </ListGroup.Item>);
+            );
         }
         return (<Accordion defaultActiveKey={node['@id']}>
-            <ListGroup.Item>
-                <ButtonToolbar>
-                    <Accordion.Toggle as={Button} variant="light" eventKey={node['@id']} onClick={(e) => this.toggleText(e.target)}>-</Accordion.Toggle>
-                    <Button variant="link" onClick={() => this.categorySelectionCallback(node['@id'])}>{node.name}</Button>
-                </ButtonToolbar>
-            </ListGroup.Item>
-            <Accordion.Collapse eventKey={node['@id']}>
-                <ListGroup>
-                    {node.children.map(row => <ListGroup.Item key={row['@id']}>{this.createPartCategory(row)}</ListGroup.Item>)}
-                </ListGroup>
-            </Accordion.Collapse>
+            <ul className="list-group" style={{listStyleType: "none"}}>
+                <li style={{marginLeft: "-5px"}}>
+                    <ButtonToolbar>
+                        <Accordion.Toggle as={Button} variant="light" eventKey={node['@id']} onClick={(e) => this.toggleText(e.target)}>-</Accordion.Toggle>
+                        <Button variant="link" onClick={() => this.categorySelectionCallback(node['@id'])}>{node.name}</Button>
+                    </ButtonToolbar>
+                </li>
+                <Accordion.Collapse eventKey={node['@id']}>
+                    <ul style={{listStyleType: "none"}}>
+                        {node.children.map(row => <li style={{marginLeft: "-5px"}} key={row['@id']}>{this.createPartCategory(row)}</li>)}
+                    </ul>
+                </Accordion.Collapse>
+            </ul>
         </Accordion>);
     }
 
@@ -105,9 +106,7 @@ class PartCategory extends React.Component {
         if (this.state.partCategories == null) {
             return (<p>Loading part categories...</p>);
         }
-        return (<ListGroup>
-            {this.createPartCategory(this.state.partCategories)}
-        </ListGroup>);
+        return this.createPartCategory(this.state.partCategories);
     }
 }
 
