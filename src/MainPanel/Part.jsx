@@ -2,7 +2,6 @@ import React from 'react';
 import $ from 'jquery';
 import PaginationDataTable from './DataTable.jsx';
 import {simpleTableHeader} from './DataTable.jsx';
-import PartDetail from './PartDetail.jsx';
 import Button from 'react-bootstrap/Button';
 import Barcode from './Barcode.jsx';
 
@@ -12,13 +11,15 @@ class PartList extends React.Component {
         super(props);
         this.state = {
             amountPerPage: 10,
-            currentPartId: null,
             isBarcodeShown: false,
-            currentPartDetail: {name: ''}
+            currentPartDetail: {name: ''},
+            availableTemplates: []
         };
         this.loadPartsInCategory = this.loadPartsInCategory.bind(this);
         this.handleBarcode = this.handleBarcode.bind(this);
         this.jumpToPage = this.jumpToPage.bind(this);
+        this.loadTemplates = this.loadTemplates.bind(this);
+        this.loadAllParts = this.loadAllParts.bind(this);
         this.partTableRef = React.createRef();
         this.partTableHeaders = [
             'Name',
@@ -30,7 +31,7 @@ class PartList extends React.Component {
         ];
     }
 
-    loadPartsInCategory(categoryId, page = 0) {
+    loadPartsInCategory(categoryId, page = 1) {
         let filterStr = '&filter=';
         if (categoryId.length === 1) {
             filterStr += `{"property":"category","operator":"=","value":"${categoryId}"}`;
@@ -48,12 +49,42 @@ class PartList extends React.Component {
             type: 'GET',
             url: `api/parts?page=${page}&itemsPerPage=${this.state.amountPerPage}` + filterStr,
             success: data => {
-                this.setState({currentPartId: null});
                 this.partTableRef.current.setDataAndTotalAmount(data['hydra:member'], data['hydra:totalItems']);
             },
             error: () => {
                 console.log('error in loadPartsInCategory');
-                this.setState({partCategories: null});
+            }
+        });
+    }
+
+    componentDidMount() {
+        this.loadTemplates();
+        this.loadAllParts(1);
+    }
+
+    loadAllParts(page = 1) {
+        $.ajax({
+            type: 'GET',
+            url: `api/parts?page=${page}&itemsPerPage=${this.state.amountPerPage}`,
+            success: data => {
+                this.partTableRef.current.setDataAndTotalAmount(data['hydra:member'], data['hydra:totalItems']);
+            },
+            error: () => {
+                console.log('error in loadAllParts');
+            }
+        });
+    }
+
+    loadTemplates() {
+        $.ajax({
+            type: 'GET',
+            url: '/templates',
+            success: data => {
+                console.log(JSON.stringify(data));
+                this.setState({availableTemplates: data});
+            },
+            error: () => {
+                this.setState({availableTemplates: []});
             }
         });
     }
@@ -81,7 +112,11 @@ class PartList extends React.Component {
     }
 
     jumpToPage(page) {
-        this.loadPartsInCategory(this.props.categoryId, page);
+        if (this.props.categoryId === null) {
+            this.loadAllParts(page);
+        } else {
+            this.loadPartsInCategory(this.props.categoryId, page);
+        }
     }
 
     render() {
@@ -91,12 +126,11 @@ class PartList extends React.Component {
                                  jumpToPage={this.jumpToPage}
                                  rowKeyMapping={row => row['@id']}
                                  amountPerPage={this.state.amountPerPage}
-                                 rowOnClick={(p) => this.setState({currentPartId: p})}
                                  callbackList={[this.handleBarcode]}
                                  ref={this.partTableRef} />
-            <PartDetail part={this.state.currentPartId}/>
             <Barcode show={this.state.isBarcodeShown}
                      onHide={() => this.setState({isBarcodeShown: false})}
+                     templateList={this.state.availableTemplates}
                      title={'Part: ' + this.state.currentPartDetail.name}
                      part={this.state.currentPartDetail} />
         </>);

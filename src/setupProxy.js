@@ -16,5 +16,11 @@ module.exports = function(app) {
                 changeOrigin : true,
                 logLevel : LOG_LEVEL
             }));
+    app.use('/templates',
+            proxy({
+                target : 'http://localhost:8081',
+                changeOrigin : true,
+                logLevel : LOG_LEVEL
+            }));
     app.listen(3000);
 }

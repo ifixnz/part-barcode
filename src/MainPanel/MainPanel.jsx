@@ -21,8 +21,8 @@ class MainPanel extends React.Component {
     render() {
         return (<Container fluid>
             <Row>
-                <Col sm={4}><PartCategory onCategorySelect={this.handleCategorySelection}/></Col>
-                <Col sm={8}><PartList categoryId={this.state.currentCategory}/></Col>
+                <Col sm={2}><PartCategory onCategorySelect={this.handleCategorySelection}/></Col>
+                <Col sm={9}><PartList categoryId={this.state.currentCategory}/></Col>
             </Row>
         </Container>);
     }
