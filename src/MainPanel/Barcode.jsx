@@ -5,6 +5,7 @@ import Table from 'react-bootstrap/Table';
 import Dropdown from 'react-bootstrap/Dropdown';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Tooltip from 'react-bootstrap/Tooltip';
+import InternalIDGeneratorPanel from './InternalIDGenerator.jsx';
 
 class Barcode extends React.Component {
 
@@ -35,32 +36,36 @@ class Barcode extends React.Component {
             if (tmpl === null) {
                 tmpl = this.props.templateList[0]['metadata']['id'];
             }
-            modalBody = (<>
-                <Dropdown>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic">Template</Dropdown.Toggle>
-                    <Dropdown.Menu>
-                        {this.props.templateList.map(t => <>
-                            <OverlayTrigger key={t.metadata.id} placement="right"
-                                            overlay={<Tooltip id={`tooltip-${t.metadata.id}`}>{t.metadata.description}</Tooltip>}>
-                                <Dropdown.Item active={t.metadata.id === tmpl}
-                                               onClick={() => this.setState({templateName: t.metadata.id})}>{t.metadata.name}</Dropdown.Item>
-                            </OverlayTrigger>{' '}</>)}
-                    </Dropdown.Menu>
-                </Dropdown>
-                <div style={{height:"10px"}}/>
-                <embed src={`/pdf/barcode?t=${tmpl}&c=${this.props.part['internalPartNumber']}&description=${this.props.part['name']}&category=${this.props.part.category['name']}`}
-                       frameBorder="0" width="100%" height="200px"/>
-                <Table striped bordered hover>
-                    <tbody>
-                        <tr><td>Name</td><td>{this.props.part.name}</td></tr>
-                        <tr><td>ID</td><td>{this.props.part.internalPartNumber}</td></tr>
-                        <tr><td>Description</td><td>{this.props.part.description}</td></tr>
-                        <tr><td>Category</td><td>{this.props.part.category.categoryPath}</td></tr>
-                        <tr><td>Storage Location</td><td>{this.props.part.storageLocation.name}</td></tr>
-                        <tr><td>Current Stock</td><td>{this.props.part.stockLevel}</td></tr>
-                    </tbody>
-                </Table>
-            </>);
+            if (this.props.part['internalPartNumber'] !== null && this.props.part['internalPartNumber'] !== '') {
+                modalBody = (<>
+                    <Dropdown>
+                        <Dropdown.Toggle variant="success" id="dropdown-basic">Template</Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {this.props.templateList.map(t => <React.Fragment key={t.metadata.id}>
+                                <OverlayTrigger placement="right"
+                                                overlay={<Tooltip id={`tooltip-${t.metadata.id}`}>{t.metadata.description}</Tooltip>}>
+                                    <Dropdown.Item active={t.metadata.id === tmpl}
+                                                   onClick={() => this.setState({templateName: t.metadata.id})}>{t.metadata.name}</Dropdown.Item>
+                                </OverlayTrigger>{' '}</React.Fragment>)}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    <div style={{height:"10px"}}/>
+                    <iframe src={`/pdf/barcode?t=${tmpl}&c=${this.props.part['internalPartNumber']}&description=${this.props.part['name']}&category=${this.props.part.category['name']}`}
+                            frameBorder="0" width="100%" height="200px" title={this.props.part['name']}/>
+                    <Table striped bordered hover>
+                        <tbody>
+                            <tr><td>Name</td><td>{this.props.part.name}</td></tr>
+                            <tr><td>ID</td><td>{this.props.part.internalPartNumber}</td></tr>
+                            <tr><td>Description</td><td>{this.props.part.description}</td></tr>
+                            <tr><td>Category</td><td>{this.props.part.category.categoryPath}</td></tr>
+                            <tr><td>Storage Location</td><td>{this.props.part.storageLocation.name}</td></tr>
+                            <tr><td>Current Stock</td><td>{this.props.part.stockLevel}</td></tr>
+                        </tbody>
+                    </Table>
+                </>);
+            } else {
+                modalBody = (<InternalIDGeneratorPanel part={this.props.part}/>);
+            }
         }
         return (
             <Modal show={this.props.show} onHide={this.props.onHide}

@@ -16,5 +16,12 @@ module.exports = function(app) {
                 changeOrigin : true,
                 logLevel : LOG_LEVEL
             }));
+    // internal part number generator
+    app.use('/ipn',
+            proxy({
+                target : 'http://localhost:8082',
+                changeOrigin : true,
+                logLevel : LOG_LEVEL
+            }));
     app.listen(3000);
 }
