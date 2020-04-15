@@ -56,7 +56,7 @@ class LoginForm extends React.Component {
         $.ajax('api/users/login', {
             type: 'POST',
             beforeSend: function(xhrObj) {
-                xhrObj.setRequestHeader("Authorization", 'WSSE profile="UsernameToken"');
+                xhrObj.setRequestHeader('Authorization', 'WSSE profile="UsernameToken"');
                 xhrObj.setRequestHeader('X-WSSE', wsseToken);
                 console.log('Set WSSE:' + wsseToken);
             },
@@ -65,25 +65,6 @@ class LoginForm extends React.Component {
                 window.localStorage.setItem('loginUser', JSON.stringify(data));
                 this.setState({user: data});
             },
-/*{
-  "@context": "/api/contexts/User",
-  "@id": "/api/users/1",
-  "@type": "User",
-  "username": "Admin",
-  "password": null,
-  "newPassword": null,
-  "email": null,
-  "legacy": false,
-  "provider": {
-    "@id": "/api/user_providers/1",
-    "@type": "UserProvider",
-    "type": "Builtin",
-    "editable": true
-  },
-  "initialUserPreferences": "[{\"preferenceKey\":\"partkeepr.formatting.currency.currencySymbolAtEnd\",\"preferenceValue\":\"false\"},{\"preferenceKey\":\"partkeepr.formatting.currency.numdecimals\",\"preferenceValue\":\"2\"},{\"preferenceKey\":\"partkeepr.formatting.currency.symbol\",\"preferenceValue\":\"\\\"\\\\u00a5\\\"\"},{\"preferenceKey\":\"partkeepr.formatting.currency.thousandsSeparator\",\"preferenceValue\":\"true\"},{\"preferenceKey\":\"partkeepr.tipoftheday.showtips\",\"preferenceValue\":\"false\"},{\"preferenceKey\":\"partkeepr.user.theme\",\"preferenceValue\":\"\\\"classic\\\"\"}]",
-  "active": true,
-  "protected": false
-} */
             error: data => {
                 try {
                     this.setState({user: null,

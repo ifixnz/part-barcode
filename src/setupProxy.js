@@ -10,15 +10,16 @@ module.exports = function(app) {
                 logLevel : LOG_LEVEL
             }));
     // barcode generator
-    app.use('/barcode',
+    app.use('/pdf',
             proxy({
                 target : 'http://localhost:8081',
                 changeOrigin : true,
                 logLevel : LOG_LEVEL
             }));
-    app.use('/templates',
+    // internal part number generator
+    app.use('/ipn',
             proxy({
-                target : 'http://localhost:8081',
+                target : 'http://localhost:8082',
                 changeOrigin : true,
                 logLevel : LOG_LEVEL
             }));
