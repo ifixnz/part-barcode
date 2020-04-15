@@ -48,7 +48,7 @@ class Barcode extends React.Component {
                     </Dropdown.Menu>
                 </Dropdown>
                 <div style={{height:"10px"}}/>
-                <embed src={`/barcode?t=${tmpl}&c=${this.props.part['internalPartNumber']}&description=${this.props.part['name']}&category=${this.props.part.category['name']}`}
+                <embed src={`/pdf/barcode?t=${tmpl}&c=${this.props.part['internalPartNumber']}&description=${this.props.part['name']}&category=${this.props.part.category['name']}`}
                        frameBorder="0" width="100%" height="200px"/>
                 <Table striped bordered hover>
                     <tbody>

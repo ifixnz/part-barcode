@@ -52,7 +52,7 @@ class PartList extends React.Component {
                 this.partTableRef.current.setDataAndTotalAmount(data['hydra:member'], data['hydra:totalItems']);
             },
             error: () => {
-                console.log('error in loadPartsInCategory');
+                this.partTableRef.current.setCustomMessage('Falied to load parts in category.');
             }
         });
     }
@@ -70,7 +70,7 @@ class PartList extends React.Component {
                 this.partTableRef.current.setDataAndTotalAmount(data['hydra:member'], data['hydra:totalItems']);
             },
             error: () => {
-                console.log('error in loadAllParts');
+                this.partTableRef.current.setCustomMessage('Falied to load all parts.');
             }
         });
     }
@@ -78,7 +78,7 @@ class PartList extends React.Component {
     loadTemplates() {
         $.ajax({
             type: 'GET',
-            url: '/templates',
+            url: '/pdf/templates',
             success: data => {
                 console.log(JSON.stringify(data));
                 this.setState({availableTemplates: data});

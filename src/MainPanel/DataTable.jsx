@@ -49,6 +49,7 @@ class PaginationDataTable extends React.Component {
         this.state = {
             totalAmount: 0,
             currentPage: this.props.initialPage ? this.props.initialPage : 1,
+            customMessage: 'Loading data...',
             data: []
         };
         this.setData = this.setData.bind(this);
@@ -56,25 +57,42 @@ class PaginationDataTable extends React.Component {
         this.setDataAndTotalAmount = this.setDataAndTotalAmount.bind(this);
         this.setCurrentPage = this.setCurrentPage.bind(this);
         this.getCurrentPage = this.getCurrentPage.bind(this);
+        this.setCustomMessage = this.setCustomMessage.bind(this);
     }
 
     setData(newData) {
-        this.setState({data: newData});
+        if (newData.length === 0) {
+            this.setState({data: [], customMessage: 'No data found'});
+        } else {
+            this.setState({data: newData});
+        }
     }
 
     setTotalAmount(amount) {
-        this.setState({totalAmount: amount});
+        if (amount === 0) {
+            this.setState({data: [], customMessage: 'No data found'});
+        } else {
+            this.setState({totalAmount: amount});
+        }
     }
 
     setDataAndTotalAmount(newData, amount) {
-        this.setState({
-            data: newData,
-            totalAmount: amount
-        });
+        if (newData.length === 0 || amount === 0) {
+            this.setState({data: [], customMessage: 'No data found'});
+        } else {
+            this.setState({
+                data: newData,
+                totalAmount: amount
+            });
+        }
     }
 
     getCurrentPage() {
         return this.state.currentPage;
+    }
+
+    setCustomMessage(msg) {
+        this.setState({data: [], customMessage: msg});
     }
 
     setCurrentPage(page) {
@@ -87,7 +105,7 @@ class PaginationDataTable extends React.Component {
             if (this.props.emptyPage) {
                 return this.props.emptyPage();
             }
-            return (<p>Loading data...</p>);
+            return (<p>{this.state.customMessage}</p>);
         }
         let pages = [];
         let allPages = parseInt(this.state.totalAmount / this.props.amountPerPage) + 1;

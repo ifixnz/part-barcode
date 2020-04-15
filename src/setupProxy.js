@@ -10,13 +10,7 @@ module.exports = function(app) {
                 logLevel : LOG_LEVEL
             }));
     // barcode generator
-    app.use('/barcode',
-            proxy({
-                target : 'http://localhost:8081',
-                changeOrigin : true,
-                logLevel : LOG_LEVEL
-            }));
-    app.use('/templates',
+    app.use('/pdf',
             proxy({
                 target : 'http://localhost:8081',
                 changeOrigin : true,
